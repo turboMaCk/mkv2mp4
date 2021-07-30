@@ -1,0 +1,11 @@
+#! /usr/bin/env bash
+
+set -euxo pipefail
+
+time=$(date +%d-%m-%Y_%H-%M-%S)
+mkdir -p "converted-${time}";
+
+for f in $1/*.mkv;
+do
+  ffmpeg -i "$f" -c copy "converted-${time}/${f%.mkv}.mp4";
+done
