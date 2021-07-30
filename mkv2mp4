@@ -1,11 +1,16 @@
 #! /usr/bin/env bash
 
-set -euxo pipefail
+set -euo pipefail
+shopt -s globstar
 
-time=$(date +%d-%m-%Y_%H-%M-%S)
+time=$(date +%d-%m-%Y_%H-%M-%S);
 mkdir -p "converted-${time}";
 
-for f in $1/*.mkv;
+for f in $1/**/*.mkv;
 do
-  ffmpeg -i "$f" -c copy "converted-${time}/${f%.mkv}.mp4";
+  relative=${f#$1/};
+  filename=$(echo "${relative%.mkv}" | sed -e 's/\//--/g')
+
+  echo $filename;
+  ffmpeg -i "$f" -c copy "converted-${time}/${filename}.mp4";
 done
